@@ -28,7 +28,7 @@ euclidean_distance = sqrt(c_squared) # get c, which is the euclidean distance
 # Part 1, Problem 2
 
 # Combine the point-pair vectors into a matrix
-matrix_points <- cbind(p,q)
+matrix_points <- rbind(p,q)
 
 # Check distances
 check_manhattan_distance = dist(matrix_points, method = "manhattan")
@@ -56,14 +56,20 @@ skim(data_geyser_OldFaithful)
 # Some quick exploration of the data
 ggplot(data_geyser_OldFaithful) + 
   geom_point( aes( x=waiting, y=eruptions) ) + 
+  labs(title="Geyser Dormancy and Eruption Severity") + 
+  labs(x="Dormancy Durations (Minutes)", y="Eruption Durations (Minutes)") +
   theme_bw()
 
 ggplot(data_geyser_OldFaithful) + 
   geom_histogram( aes( x=waiting ) ) + 
+  labs(title="Durations of Geyser Dormancy") +
+  labs(x="Dormany Durations (Minutes)") +
   theme_bw()
 
 ggplot(data_geyser_OldFaithful) + 
   geom_histogram( aes( x=eruptions ) ) +
+  labs(title="Durations of Geyser Activity") +
+  labs(x="Eruption Durations (Minutes)") +
   theme_bw()
 
 
@@ -99,8 +105,8 @@ dissplot(distanceMatrix_geyser_OldFaithful)
 # Load the Iris data, scrub the dataset of qualitative variables,
 # then perform steps needed to yield a distance matrix.
 # For reference, it measures 4+1 variables, all containing 150 observations
-distanceMatrix_flowers_Iris <- data(iris) %>%
-  dplyr::select(-Species) %>% # exclude species
+distanceMatrix_flowers_Iris <- iris %>%
+  dplyr::select( -Species ) %>% # exclude species
   scale() %>% # standardise variables
   dist(method = "euclidean") # and finally calculate the distance matrix
 
@@ -112,7 +118,7 @@ distanceMatrix_flowers_Iris <- data(iris) %>%
 # Outputs a 'tree' object (plot() outputs a dendogram when it takes a 'tree' object)
 hc_complete_flowers_Iris = hclust(distanceMatrix_flowers_Iris, method = "complete")
 # Plot a dendogram of the clustering
-plot(hc_complete_flowers_Iris, hang = -1)
+plot(hc_complete_flowers_Iris, hang = -1, xlab="Flower ID")
 
 
 
@@ -124,9 +130,9 @@ library(dendextend) # Required for cutree()
 prunedTree_flowers_Iris = cutree(hc_complete_flowers_Iris, k=c(2,3))
 
 # Plot them side-by-side
-par(mfrow=c(2,2))
-plot( prunedTree_flowers_Iris[,1] )
-plot( prunedTree_flowers_Iris[,2] )
+par(mfrow=c(2,1))
+plot( prunedTree_flowers_Iris[,1], main="Iris Clustering (k=2)", ylab="Group #" )
+plot( prunedTree_flowers_Iris[,2], main="Iris Clustering (k=3)", ylab="Group #" )
 par(mfrow=c(1,1))
 
 
@@ -138,9 +144,9 @@ par(mfrow=c(1,1))
 hc_complete_flowers_Iris = hclust(distanceMatrix_flowers_Iris, method = "complete")
 hc_single_flowers_Iris = hclust(distanceMatrix_flowers_Iris, method = "single")
 # Plot them side-by-side
-par(mfrow=c(2,2))
-plot( hc_complete_flowers_Iris, hang = -1 )
-plot( hc_single_flowers_Iris, hang = -1 )
+par(mfrow=c(1,2))
+plot( hc_complete_flowers_Iris, hang = -1, main="Cluster Dendrogram (Complete)", xlab="Flower ID")
+plot( hc_single_flowers_Iris, hang = -1, main="Cluster Dendrogram (Single)", xlab="Flower ID")
 par(mfrow=c(1,1))
 
 
